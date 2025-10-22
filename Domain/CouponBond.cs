@@ -25,6 +25,7 @@ namespace Domain
 
             // Simplified approach: Use the provided discount factor directly
             // on the future value of coupon payments + face value
+            //
             decimal annualCouponPayment = rate * FaceValue;
             decimal totalCouponPayments = annualCouponPayment * (decimal)YearsToMaturity;
             decimal totalFutureValue = FaceValue + totalCouponPayments;
