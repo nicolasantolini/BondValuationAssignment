@@ -1,0 +1,91 @@
+name: .NET CI Pipeline
+
+on:
+  push:
+    branches: [ main, develop, feature/* ]
+  pull_request:
+    branches: [ main, develop ]
+
+env:
+  DOTNET_VERSION: '9.0.x'
+  NUGET_CACHE_PATH: ~/.nuget/packages
+
+jobs:
+  test:
+    name: Build and Test
+    runs-on: windows-latest
+    
+    steps:
+    # Step 1: Checkout code
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    # Step 2: Setup .NET
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    # Step 3: Cache NuGet packages for faster builds
+    - name: Cache NuGet packages
+      uses: actions/cache@v3
+      with:
+        path: ${{ env.NUGET_CACHE_PATH }}
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+        restore-keys: |
+          ${{ runner.os }}-nuget-
+
+    # Step 4: Restore dependencies
+    - name: Restore dependencies
+      run: dotnet restore
+
+    # Step 5: Build the solution
+    - name: Build solution
+      run: dotnet build --configuration Release --no-restore
+
+    # Step 6: Run tests
+    - name: Run tests
+      run: dotnet test --configuration Release --no-build --verbosity normal --logger "trx;LogFileName=test-results.trx"
+
+    # Step 7: Publish test results
+    - name: Publish test results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: test-results
+        path: |
+          **/TestResults/*.trx
+          **/TestResults/*.html
+        retention-days: 7
+
+  security-scan:
+    name: Security Scan
+    runs-on: windows-latest
+    needs: test
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    # Security vulnerability scan
+    - name: Run security scan
+      run: dotnet list package --vulnerable --include-transitive
+
+  code-quality:
+    name: Code Quality
+    runs-on: windows-latest
+    needs: test
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
