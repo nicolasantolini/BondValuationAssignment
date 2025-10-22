@@ -1,17 +1,45 @@
-name: .NET CI Pipeline
+name: .NET Advanced CI
 
 on:
   push:
-    branches: [ master, develop ]
+    branches: [ master ]
   pull_request:
     branches: [ master ]
 
 env:
-  DOTNET_VERSION: '9.0'
+  DOTNET_VERSION: '9.0.x'
 
 jobs:
-  build-and-test:
+  test-matrix:
+    name: Test on Multiple Runtimes
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+        dotnet: ['8.0.x', '9.0.x']
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET ${{ matrix.dotnet }}
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ matrix.dotnet }}
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet build --configuration Release --no-restore
+
+    - name: Test
+      run: dotnet test --configuration Release --no-build --verbosity normal --logger "trx"
+
+  coverage:
+    name: Test Coverage
     runs-on: windows-latest
+    needs: test-matrix
     
     steps:
     - name: Checkout code
@@ -22,11 +50,17 @@ jobs:
       with:
         dotnet-version: ${{ env.DOTNET_VERSION }}
 
-    - name: Restore dependencies
-      run: dotnet restore
+    # Install coverage tool
+    - name: Install coverlet.collector
+      run: dotnet add package coverlet.collector --version 6.0.0
 
-    - name: Build
-      run: dotnet build --configuration Release --no-restore
-      
-    - name: Test
-      run: dotnet test --configuration Release --no-build --verbosity normal
+    - name: Run tests with coverage
+      run: |
+        dotnet test --collect:"XPlat Code Coverage" --settings coverlet.runsettings
+
+    - name: Upload coverage reports
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage-reports
+        path: TestResults/**/coverage.cobertura.xml
+        retention-days: 7
