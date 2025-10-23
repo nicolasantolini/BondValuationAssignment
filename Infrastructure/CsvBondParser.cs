@@ -1,14 +1,17 @@
 ﻿using CsvHelper;
 using CsvHelper.Configuration;
 using Domain;
+using Domain.Exceptions;
+using System;
 using System.Globalization;
 
 namespace Infrastructure
 {
     public class CsvBondParser : IBondParser
     {
-        public List<Bond> ParseBonds(string filePath)
+        public BondParsingResult ParseBonds(string filePath)
         {
+            var result = new BondParsingResult();
             var config = new CsvConfiguration(CultureInfo.InvariantCulture)
             {
                 Delimiter = ";",
@@ -19,29 +22,46 @@ namespace Infrastructure
             using var reader = new StreamReader(filePath);
             using var csv = new CsvReader(reader, config);
 
-            var records = csv.GetRecords<CsvBondRecord>().ToList();
-
-            var bonds = new List<Bond>();
-            foreach (var record in records)
+            // CsvHelper does not load all records at once, so we can process them one by one.
+            while (csv.Read())
             {
-                var bond = BondFactory.CreateBond(record.Type);
+                CsvBondRecord record = null;
+                try
+                {
+                    record = csv.GetRecord<CsvBondRecord>();
 
-                // Map properties
-                bond.BondID = record.BondID;
-                bond.Issuer = record.Issuer;
-                bond.Rate = record.Rate;
-                bond.FaceValue = record.FaceValue;
-                bond.PaymentFrequency = record.PaymentFrequency;
-                bond.Rating = record.Rating;
-                bond.Type = record.Type;
-                bond.YearsToMaturity = record.YearsToMaturity;
-                bond.DiscountFactor = record.DiscountFactor;
-                bond.DeskNotes = record.DeskNotes;
+                    var bond = BondFactory.CreateBond(record.Type);
 
-                bonds.Add(bond);
+                    // Map properties
+                    bond.BondID = record.BondID;
+                    bond.Issuer = record.Issuer;
+                    bond.Rate = record.Rate;
+                    bond.FaceValue = record.FaceValue;
+                    bond.PaymentFrequency = record.PaymentFrequency;
+                    bond.Rating = record.Rating;
+                    bond.Type = record.Type;
+                    bond.YearsToMaturity = record.YearsToMaturity;
+                    bond.DiscountFactor = record.DiscountFactor;
+                    bond.DeskNotes = record.DeskNotes;
+
+
+                    result.Bonds.Add(bond);
+                }
+                catch (InvalidBondDataException ex)
+                {
+                    var bondId = record?.BondID ?? "N/A";
+                    var rowNumber = csv.Parser.Row;
+                    result.Errors.Add($"Invalid data in row {rowNumber}: {ex.Message}");
+                }
+                catch (Exception ex)
+                {
+                    var bondId = record?.BondID ?? "N/A";
+                    var rowNumber = csv.Parser.Row;
+                    result.Errors.Add($"Error parsing row {rowNumber} for BondID '{bondId}': {ex.Message}");
+                }
             }
 
-            return bonds;
+            return result;
         }
     }
 

@@ -4,6 +4,6 @@ namespace Infrastructure
 {
     public interface IBondParser
     {
-        List<Bond> ParseBonds(string filePath);
+        BondParsingResult ParseBonds(string filePath);
     }
 }
