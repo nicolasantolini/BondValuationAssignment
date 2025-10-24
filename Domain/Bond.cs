@@ -116,7 +116,7 @@ namespace Domain
 
         public abstract decimal CalculatePresentValue();
 
-        protected int GetPaymentsPerYear()
+        public int GetPaymentsPerYear()
         {
             return PaymentFrequency.ToLowerInvariant() switch
             {

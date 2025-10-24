@@ -14,7 +14,7 @@ namespace Domain
                 return new Rate { Value = 0m};
             }
 
-            rateString = rateString.TrimEnd('%').Trim();
+            rateString = rateString.Trim().TrimEnd('%');
 
             if (decimal.TryParse(rateString, NumberStyles.Any, CultureInfo.InvariantCulture, out var value))
             {
