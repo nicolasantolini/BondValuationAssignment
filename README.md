@@ -2,7 +2,7 @@
 
 This service ingests structured CSV bond position files, validates them, and computes present values and other valuation metrics. It returns results in JSON or CSV and exposes a small HTTP API for batch valuation and health checks. It is intended for portfolio managers and engineers who need deterministic, auditable bond valuations from CSV inputs.
 
-## Features
+### Features
 - Parse structured CSV bond records
 - Calculate bond present value (coupon-bearing and zero-coupon)
 - Return output in JSON or CSV
@@ -43,12 +43,13 @@ docker run -p 8080:8080 bondvaluationservice
 curl http://localhost:8080/health
 ```
 
-## Sample CSV input
+## Example Case
+### Sample CSV input
 Provide a header row with these columns (example):
 <img width="2368" height="88" alt="image" src="https://github.com/user-attachments/assets/8d14d987-9ebe-4dfe-abbd-b95543d7be14" />
 
 
-## Sample JSON output
+### Sample JSON output
 ```json
 {
   "results": [
@@ -68,7 +69,7 @@ Provide a header row with these columns (example):
 }
 ```
 
-## API (examples)
+### API (examples)
 - GET /health
   - 200 OK
 - POST /
