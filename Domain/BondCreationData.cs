@@ -2,7 +2,8 @@ namespace Domain
 {
     public record BondCreationData
     {
-        public required string BondId { get; init; }
+        // Unconventional naming to match CSV headers for BondID
+        public required string BondID { get; init; }
         public required string Issuer { get; init; }
         public required string Rate { get; init; }
         public required decimal FaceValue { get; init; }

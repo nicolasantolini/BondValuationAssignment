@@ -21,7 +21,7 @@ namespace Domain
             init
             {
                 if (string.IsNullOrWhiteSpace(value))
-                    throw new InvalidBondDataException("BondId is required.", fieldName: nameof(BondId), invalidValue: value);
+                    throw new InvalidBondDataException("BondID is required.", fieldName: nameof(BondId), invalidValue: value);
                 _bondId = value;
             }
         }

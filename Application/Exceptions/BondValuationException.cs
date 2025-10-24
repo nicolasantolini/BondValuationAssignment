@@ -6,7 +6,7 @@ namespace Application.Exceptions
     {
         public string BondId { get; }
 
-        public BondValuationException(string message, string bondId = null, Exception innerException = null)
+        public BondValuationException(string message, string bondId = "", Exception innerException = null)
             : base(message, innerException)
         {
             BondId = bondId;
@@ -18,7 +18,7 @@ namespace Application.Exceptions
             {
                 if (!string.IsNullOrEmpty(BondId))
                 {
-                    return $"Valuation error for BondId '{BondId}': {base.Message}";
+                    return $"Valuation error for BondID '{BondId}': {base.Message}";
                 }
                 return base.Message;
             }

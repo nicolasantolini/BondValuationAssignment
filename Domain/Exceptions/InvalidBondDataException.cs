@@ -22,7 +22,7 @@ namespace Domain.Exceptions
             {
                 if (BondId != null && FieldName != null)
                 {
-                    return $"Error processing BondId '{BondId}': Invalid value '{InvalidValue}' for field '{FieldName}'. {base.Message}";
+                    return $"Error processing BondID '{BondId}': Invalid value '{InvalidValue}' for field '{FieldName}'. {base.Message}";
                 }
                 return base.Message;
             }

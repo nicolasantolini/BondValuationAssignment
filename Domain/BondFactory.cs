@@ -12,9 +12,9 @@
                         || s.Equals("inflation-linked", StringComparison.OrdinalIgnoreCase) // uses coupon logic
                     => new CouponBond
                     {
-                        BondId = data.BondId,
+                        BondId = data.BondID,
                         Issuer = data.Issuer,
-                        Rate = Rate.Parse(data.Rate, data.BondId),
+                        Rate = Rate.Parse(data.Rate, data.BondID),
                         FaceValue = data.FaceValue,
                         PaymentFrequency = data.PaymentFrequency,
                         Rating = data.Rating,
@@ -27,9 +27,9 @@
                 var s when s.Equals("zero-coupon", StringComparison.OrdinalIgnoreCase)
                     => new ZeroCouponBond
                     {
-                        BondId = data.BondId,
+                        BondId = data.BondID,
                         Issuer = data.Issuer,
-                        Rate = Rate.Parse(data.Rate, data.BondId),
+                        Rate = Rate.Parse(data.Rate, data.BondID),
                         FaceValue = data.FaceValue,
                         PaymentFrequency = data.PaymentFrequency,
                         Rating = data.Rating,
