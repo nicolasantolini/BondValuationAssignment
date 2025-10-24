@@ -1,4 +1,4 @@
-name: .NET CI/CD Pipeline
+name: .NET CI/CD Pipeline - Container Apps
 
 on:
   push:
@@ -6,10 +6,9 @@ on:
 
 env:
   DOTNET_VERSION: '9.0'
-  AZURE_WEBAPP_NAME: 'bond-valuation-api'
-  ACR_REGISTRY: 'bondvaluationassessment.azurecr.io'
-  IMAGE_NAME: 'bond-valuation-service'
+  CONTAINER_APP_NAME: 'bond-valuation-api'
   RESOURCE_GROUP: 'BondValuationAssessment'
+  ENVIRONMENT_NAME: 'BondValuationAssessment'
 
 jobs:
   build-and-test:
@@ -57,7 +56,7 @@ jobs:
           ${{ secrets.DOCKER_USERNAME }}/bondsvaluationservice:latest
           ${{ secrets.DOCKER_USERNAME }}/bondsvaluationservice:${{ github.sha }}
 
-  deploy-to-azure:
+  deploy-to-container-app:
     needs: build-and-push-docker
     runs-on: ubuntu-latest
     
@@ -67,30 +66,18 @@ jobs:
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: Log in to Azure Container Registry
+    - name: Deploy to Azure Container App
       run: |
-        az acr login --name ${{ env.ACR_REGISTRY }}
-
-    - name: Pull from Docker Hub and push to ACR
-      run: |
-        # Pull from Docker Hub
-        docker pull ${{ secrets.DOCKER_USERNAME }}/bondsvaluationservice:${{ github.sha }}
-        
-        # Tag for ACR
-        docker tag ${{ secrets.DOCKER_USERNAME }}/bondsvaluationservice:${{ github.sha }} ${{ env.ACR_REGISTRY }}/samples/${{ env.IMAGE_NAME }}:${{ github.sha }}
-        
-        # Push to ACR
-        docker push ${{ env.ACR_REGISTRY }}/samples/${{ env.IMAGE_NAME }}:${{ github.sha }}
-
-    - name: Update App Service container configuration
-      run: |
-        az webapp config container set \
-          --name ${{ env.AZURE_WEBAPP_NAME }} \
+        az containerapp update \
+          --name ${{ env.CONTAINER_APP_NAME }} \
           --resource-group ${{ env.RESOURCE_GROUP }} \
-          --container-image-name ${{ env.ACR_REGISTRY }}/samples/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          --image ${{ secrets.DOCKER_USERNAME }}/bondsvaluationservice:${{ github.sha }}
 
-    - name: Restart App Service
+    - name: Get Container App URL
       run: |
-        az webapp restart \
-          --name ${{ env.AZURE_WEBAPP_NAME }} \
-          --resource-group ${{ env.RESOURCE_GROUP }}
+        echo "Your API is available at:"
+        az containerapp show \
+          --name ${{ env.CONTAINER_APP_NAME }} \
+          --resource-group ${{ env.RESOURCE_GROUP }} \
+          --query "properties.configuration.ingress.fqdn" \
+          -o tsv
