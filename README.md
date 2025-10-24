@@ -77,6 +77,26 @@ Provide a header row with these columns (example):
   - Returns: application/json with computed results and detailed errors, or text/csv without errors
 - GET /swagger
   - OpenAPI / Swagger UI (when enabled) for interactive docs
+ 
+## API Testing
+
+**Live Endpoint:**  
+`POST https://bond-valuation-api.orangedune-ba3ed3c8.northeurope.azurecontainerapps.io/api/BondValuation/`
+
+### Quick Test
+You can use the **bond_positions_sample.csv** from this repo for the body.
+
+```bash
+# JSON response
+curl -X POST "https://bond-valuation-api.orangedune-ba3ed3c8.northeurope.azurecontainerapps.io/api/BondValuation/?format=json" \
+  -H "Content-Type: text/csv" \
+  --data-binary @bond_positions_sample.csv
+
+# CSV response  
+curl -X POST "https://bond-valuation-api.orangedune-ba3ed3c8.northeurope.azurecontainerapps.io/api/BondValuation/?format=csv" \
+  -H "Content-Type: text/csv" \
+  --data-binary @bond_positions_sample.csv
+'''
 
 ## Configuration
 - Ports: configured in appsettings.json or environment variables (e.g., ASPNETCORE_URLS)
