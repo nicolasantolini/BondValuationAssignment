@@ -4,21 +4,21 @@ namespace Application.Exceptions
 {
     public class BondValuationException : Exception
     {
-        public string BondID { get; }
+        public string BondId { get; }
 
         public BondValuationException(string message, string bondId = null, Exception innerException = null)
             : base(message, innerException)
         {
-            BondID = bondId;
+            BondId = bondId;
         }
 
         public override string Message
         {
             get
             {
-                if (!string.IsNullOrEmpty(BondID))
+                if (!string.IsNullOrEmpty(BondId))
                 {
-                    return $"Valuation error for BondId '{BondID}': {base.Message}";
+                    return $"Valuation error for BondId '{BondId}': {base.Message}";
                 }
                 return base.Message;
             }

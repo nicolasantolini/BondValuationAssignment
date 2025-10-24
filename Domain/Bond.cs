@@ -9,7 +9,7 @@ namespace Domain
         private decimal _yearsToMaturity;
         private decimal _discountFactor;
         private string _paymentFrequency = "";
-        private Rate _rate;
+        private Rate _rate = null!;
         private string _bondId = "";
         private string _issuer = "";
         private string _rating = "";

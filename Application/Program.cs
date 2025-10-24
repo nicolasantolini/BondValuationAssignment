@@ -24,54 +24,17 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+// Only use HTTPS redirection in development
+// In Azure App Service, the SSL termination happens at the load balancer
+if (app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
 
 app.UseAuthorization();
 
 app.MapControllers();
 
-app.Run();
-
-//using Application;
-//using Application.Services;
-//using CsvHelper;
-//using CsvHelper.Configuration;
-//using Infrastructure;
-//using System.Globalization;
-
-//// Setup dependencies
-//var bondParser = new CsvBondParser();
-//var valuationService = new BondValuationService(bondParser);
-
-//// Calculate valuations
-//var results = valuationService.CalculateValuations("bond_positions_sample.csv");
-
-//// Output results to CSV
-//var outputConfig = new CsvConfiguration(CultureInfo.InvariantCulture)
-//{
-//    Delimiter = ";",
-//    HasHeaderRecord = true
-//};
-
-//using var writer = new StreamWriter("bond_valuations_output.csv");
-//using var csv = new CsvWriter(writer, outputConfig);
-
-//csv.WriteRecords(results.Results);
-
-//Console.WriteLine($"Valuation completed! {results.Results.Count} bonds processed.");
-//Console.WriteLine("Output saved to: bond_valuations_output.csv");
-
-//if (results.HasErrors)
-//{
-//    foreach (var error in results.Errors)
-//    {
-//        Console.WriteLine($"Error: {error}");
-//    }
-//}
-
-//// Display sample results
-//Console.WriteLine("\nSample results:");
-//foreach (var result in results.Results.Take(5))
-//{
-//    Console.WriteLine($"BondId: {result.BondId}, Type: {result.Type}, PV: {result.PresentValue:C}");
-//}
+// Use the port that Azure provides, or default to 8080
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+app.Run($"http://0.0.0.0:{port}");
