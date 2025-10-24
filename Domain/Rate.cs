@@ -6,28 +6,19 @@ namespace Domain
     public record Rate
     {
         public decimal Value { get; init; }
-        public bool AdjustForInflation { get; init; }
 
         public static Rate Parse(string rateString, string? bondId = null)
         {
             if (string.IsNullOrWhiteSpace(rateString))
             {
-                return new Rate { Value = 0m, AdjustForInflation = false };
+                return new Rate { Value = 0m};
             }
 
-            bool adjustForInflation = rateString.Contains("Inflation+", StringComparison.OrdinalIgnoreCase);
-            var valuePart = rateString;
+            rateString = rateString.TrimEnd('%').Trim();
 
-            if (adjustForInflation)
+            if (decimal.TryParse(rateString, NumberStyles.Any, CultureInfo.InvariantCulture, out var value))
             {
-                valuePart = rateString.Replace("Inflation+", "", StringComparison.OrdinalIgnoreCase);
-            }
-
-            valuePart = valuePart.TrimEnd('%').Trim();
-
-            if (decimal.TryParse(valuePart, NumberStyles.Any, CultureInfo.InvariantCulture, out var value))
-            {
-                return new Rate { Value = value / 100m, AdjustForInflation = adjustForInflation };
+                return new Rate { Value = value / 100m};
             }
 
             throw new InvalidBondDataException("Invalid rate format.", bondId, nameof(Rate), rateString);

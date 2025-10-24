@@ -9,7 +9,6 @@
             Bond bond = t switch
             {
                 var s when s.Equals("bond", StringComparison.OrdinalIgnoreCase)
-                        || s.Equals("inflation-linked", StringComparison.OrdinalIgnoreCase) // uses coupon logic
                     => new CouponBond
                     {
                         BondId = data.BondID,

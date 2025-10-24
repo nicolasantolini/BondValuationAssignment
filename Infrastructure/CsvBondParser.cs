@@ -2,7 +2,6 @@
 using CsvHelper.Configuration;
 using Domain;
 using Domain.Exceptions;
-using System;
 using System.Globalization;
 
 namespace Infrastructure

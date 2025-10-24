@@ -1,7 +1,4 @@
-﻿using System;
-using System.Globalization;
-
-namespace Domain
+﻿namespace Domain
 {
     public class CouponBond : Bond
     {
@@ -20,7 +17,7 @@ namespace Domain
 
             // Coupon bonds: PV = ((1 + (Rate / Payments per Year))^{Years to Maturity × Payments per Year} × Face value) × DF
             decimal couponPerPeriod = rate / paymentsPerYear;
-            decimal numberOfPeriods = (decimal)(YearsToMaturity * paymentsPerYear);
+            decimal numberOfPeriods = YearsToMaturity * paymentsPerYear;
 
             double baseValue = 1.0 + (double)couponPerPeriod;
             double exponent = (double)numberOfPeriods;

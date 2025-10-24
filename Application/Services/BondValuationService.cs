@@ -44,7 +44,7 @@ namespace Application.Services
                         Issuer = bond.Issuer,
                         Rating = bond.Rating,
                         YearsToMaturity = bond.YearsToMaturity,
-                        DeskNotes = bond.DeskNotes
+                        DeskNotes = bond.DeskNotes?.Trim() ?? string.Empty
                     });
                 }
                 catch (BondValuationException ex)

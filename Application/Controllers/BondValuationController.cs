@@ -16,8 +16,8 @@ namespace Application.Controllers
             _bondValuationService = bondValuationService;
         }
 
-        [HttpPost("calculate")]
-        public async Task<IActionResult> CalculateValuations(IFormFile file, [FromQuery] string format = "json")
+        [HttpPost()]
+        public async Task<IActionResult> CalculateValuations(IFormFile file)
         {
             if (file == null || file.Length == 0)
                 return BadRequest("No file was uploaded");
@@ -34,13 +34,16 @@ namespace Application.Controllers
                 // Process the file using the valuation service
                 var results = _bondValuationService.CalculateValuations(tempFilePath);
 
-                // Return results in the requested format
-                return format.ToLower() switch
+                // Content negotiation based on Accept header
+                var acceptHeader = Request.Headers["Accept"].ToString();
+
+                if (acceptHeader.Contains("text/csv"))
                 {
-                    "json" => Ok(results),
-                    "csv" => File(GenerateCsv(results.Results), "text/csv", "bond_valuations_"+DateTime.Now.ToShortDateString()+".csv"),
-                    _ => BadRequest($"Unsupported format: {format}")
-                };
+                    return File(GenerateCsv(results.Results), "text/csv", "bond_valuations_" + DateTime.Now.ToString("yyyyMMdd") + ".csv");
+                }
+                
+                // Default to JSON
+                return Ok(results);
             }
             finally
             {

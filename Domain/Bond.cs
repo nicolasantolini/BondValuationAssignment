@@ -106,6 +106,8 @@ namespace Domain
             {
                 if (value < 0)
                     throw new InvalidBondDataException("Discount factor cannot be negative.", BondId, nameof(DiscountFactor), value.ToString(CultureInfo.InvariantCulture));
+                if (value > 1)
+                    throw new InvalidBondDataException("Discount factor cannot be greater than 1.", BondId, nameof(DiscountFactor), value.ToString(CultureInfo.InvariantCulture));
                 _discountFactor = value;
             }
         }
@@ -116,9 +118,6 @@ namespace Domain
 
         protected int GetPaymentsPerYear()
         {
-            if (string.IsNullOrWhiteSpace(PaymentFrequency))
-                return 1;
-
             return PaymentFrequency.ToLowerInvariant() switch
             {
                 "quarterly" => 4,
