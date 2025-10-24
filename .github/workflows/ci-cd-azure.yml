@@ -82,9 +82,15 @@ jobs:
         # Push to ACR
         docker push ${{ env.ACR_REGISTRY }}/samples/${{ env.IMAGE_NAME }}:${{ github.sha }}
 
-    - name: Deploy to Azure App Service
+    - name: Update App Service container configuration
       run: |
         az webapp config container set \
           --name ${{ env.AZURE_WEBAPP_NAME }} \
           --resource-group ${{ env.RESOURCE_GROUP }} \
-          --docker-custom-image-name ${{ env.ACR_REGISTRY }}/samples/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          --container-image-name ${{ env.ACR_REGISTRY }}/samples/${{ env.IMAGE_NAME }}:${{ github.sha }}
+
+    - name: Restart App Service
+      run: |
+        az webapp restart \
+          --name ${{ env.AZURE_WEBAPP_NAME }} \
+          --resource-group ${{ env.RESOURCE_GROUP }}
