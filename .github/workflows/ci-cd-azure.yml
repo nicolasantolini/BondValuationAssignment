@@ -33,29 +33,32 @@ jobs:
     - name: Test
       run: dotnet test --configuration Release --no-build --verbosity normal
 
-  build-and-push-to-acr:
+  build-and-push-docker:
     needs: build-and-test
     runs-on: ubuntu-latest
     
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-
-    - name: Azure Login
-      uses: azure/login@v1
+      
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v3
       with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
 
-    - name: Build and push to ACR
+    - name: Build and push Docker image
       uses: docker/build-push-action@v5
       with:
         context: .
         file: ./Application/Dockerfile
         push: true
-        tags: ${{ env.ACR_REGISTRY }}/samples/${{ env.IMAGE_NAME }}:${{ github.sha }}
+        tags: |
+          ${{ secrets.DOCKER_USERNAME }}/bondsvaluationservice:latest
+          ${{ secrets.DOCKER_USERNAME }}/bondsvaluationservice:${{ github.sha }}
 
   deploy-to-azure:
-    needs: build-and-push-to-acr
+    needs: build-and-push-docker
     runs-on: ubuntu-latest
     
     steps:
@@ -64,15 +67,22 @@ jobs:
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: Configure App Service Settings
+    - name: Log in to Azure Container Registry
       run: |
-        # Set the port configuration
-        az webapp config appsettings set \
-          --name ${{ env.AZURE_WEBAPP_NAME }} \
-          --resource-group ${{ env.RESOURCE_GROUP }} \
-          --settings WEBSITES_PORT=8080
+        az acr login --name ${{ env.ACR_REGISTRY }}
 
-    - name: Deploy to Azure App Service
+    - name: Pull from Docker Hub and push to ACR
+      run: |
+        # Pull from Docker Hub
+        docker pull ${{ secrets.DOCKER_USERNAME }}/bondsvaluationservice:${{ github.sha }}
+        
+        # Tag for ACR
+        docker tag ${{ secrets.DOCKER_USERNAME }}/bondsvaluationservice:${{ github.sha }} ${{ env.ACR_REGISTRY }}/samples/${{ env.IMAGE_NAME }}:${{ github.sha }}
+        
+        # Push to ACR
+        docker push ${{ env.ACR_REGISTRY }}/samples/${{ env.IMAGE_NAME }}:${{ github.sha }}
+
+    - name: Update App Service container configuration
       run: |
         az webapp config container set \
           --name ${{ env.AZURE_WEBAPP_NAME }} \
@@ -84,13 +94,3 @@ jobs:
         az webapp restart \
           --name ${{ env.AZURE_WEBAPP_NAME }} \
           --resource-group ${{ env.RESOURCE_GROUP }}
-
-    - name: Check deployment status
-      run: |
-        echo "Waiting for app to start..."
-        sleep 30
-        az webapp log tail \
-          --name ${{ env.AZURE_WEBAPP_NAME }} \
-          --resource-group ${{ env.RESOURCE_GROUP }} \
-          --lines 50
-      continue-on-error: true
