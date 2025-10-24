@@ -1,6 +1,6 @@
 # Bond Valuation Assignment
 
-This service ingests structured CSV bond position files, validates them, and computes present values and other valuation metrics. It returns results in JSON or CSV and exposes a small HTTP API for batch valuation and health checks. It is intended for portfolio managers and engineers who need deterministic, auditable bond valuations from CSV inputs.
+This service accepts structured CSV bond position files, validates them, and computes present values and other valuation metrics. It returns results in JSON or CSV and exposes a small HTTP API for batch valuation and health checks. It is intended for portfolio managers and engineers who need deterministic, auditable bond valuations from CSV inputs.
 
 ### Features
 - Parse structured CSV bond records
@@ -81,7 +81,6 @@ Provide a header row with these columns (example):
 ## Configuration
 - Ports: configured in appsettings.json or environment variables (e.g., ASPNETCORE_URLS)
 - Logging: configured via appsettings.{Environment}.json
-- Optional: tuning for parallel processing, validation strictness, output formats
 
 ## Error handling
 - Validation errors are returned per-record with root-cause diagnostics (column, value, rule).
