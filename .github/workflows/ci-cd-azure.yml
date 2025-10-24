@@ -9,7 +9,7 @@ on:
 env:
   DOTNET_VERSION: '9.0'
   AZURE_WEBAPP_NAME: 'bond-valuation-api'
-  CONTAINER_REGISTRY: 'bondvaluationassessment.azurecr.io'  # From your ACR
+  CONTAINER_REGISTRY: 'bondvaluationassessment.azurecr.io' 
   IMAGE_NAME: 'bond-valuation-service'
 
 jobs:
