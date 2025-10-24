@@ -63,5 +63,3 @@ jobs:
         tags: |
           ${{ secrets.DOCKER_USERNAME }}/bondsvaluationservice:latest
           ${{ secrets.DOCKER_USERNAME }}/bondsvaluationservice:${{ github.sha }}
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
