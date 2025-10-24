@@ -40,7 +40,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
   
-    - name: Log in to Docker Hub
+    - name: Log in to Docker Hub using Secrets
       run: docker login docker.io -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
   
     - name: Build and push Docker image
