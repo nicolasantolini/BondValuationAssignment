@@ -73,5 +73,5 @@ app.Run();
 //Console.WriteLine("\nSample results:");
 //foreach (var result in results.Results.Take(5))
 //{
-//    Console.WriteLine($"BondID: {result.BondID}, Type: {result.Type}, PV: {result.PresentValue:C}");
+//    Console.WriteLine($"BondId: {result.BondId}, Type: {result.Type}, PV: {result.PresentValue:C}");
 //}

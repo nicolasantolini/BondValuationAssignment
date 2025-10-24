@@ -38,7 +38,7 @@ namespace Application.Services
                 {
                     valuationResults.Add(new BondValuationDTO
                     {
-                        BondID = bond.BondID,
+                        BondId = bond.BondId,
                         Type = bond.Type,
                         PresentValue = bond.CalculatePresentValue(),
                         Issuer = bond.Issuer,
@@ -53,7 +53,7 @@ namespace Application.Services
                 }
                 catch (Exception ex)
                 {
-                    errors.Add($"Error calculating present value for bond {bond.BondID}: {ex.Message}");
+                    errors.Add($"Error calculating present value for bond {bond.BondId}: {ex.Message}");
                 }
             }
 

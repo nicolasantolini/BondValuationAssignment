@@ -6,91 +6,126 @@ namespace Domain
     public abstract class Bond
     {
         private decimal _faceValue;
-        private double _yearsToMaturity;
+        private decimal _yearsToMaturity;
         private decimal _discountFactor;
+        private string _paymentFrequency = "";
+        private Rate _rate;
+        private string _bondId = "";
+        private string _issuer = "";
+        private string _rating = "";
+        private string _type = "";
 
-        public string BondID { get; set; }
-        public string Issuer { get; set; }
-        public string Rate { get; set; }
+        public required string BondId
+        {
+            get => _bondId;
+            init
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                    throw new InvalidBondDataException("BondId is required.", fieldName: nameof(BondId), invalidValue: value);
+                _bondId = value;
+            }
+        }
 
-        public decimal FaceValue
+        public required string Issuer
+        {
+            get => _issuer;
+            init
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                    throw new InvalidBondDataException("Issuer is required.", BondId, nameof(Issuer), value);
+                _issuer = value;
+            }
+        }
+
+        public required Rate Rate
+        {
+            get => _rate;
+            init => _rate = value;
+        }
+
+        public required decimal FaceValue
         {
             get => _faceValue;
-            set
+            init
             {
                 if (value < 0)
-                    throw new InvalidBondDataException("Face value cannot be negative.", BondID, nameof(FaceValue), value.ToString());
+                    throw new InvalidBondDataException("Face value cannot be negative.", BondId, nameof(FaceValue), value.ToString(CultureInfo.InvariantCulture));
                 _faceValue = value;
             }
         }
 
-        public string PaymentFrequency { get; set; }
-        public string Rating { get; set; }
-        public string Type { get; set; }
+        public required string PaymentFrequency
+        {
+            get => _paymentFrequency;
+            init
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                    throw new InvalidBondDataException("Payment frequency is required.", BondId, nameof(PaymentFrequency), value);
+                _paymentFrequency = value;
+                _ = GetPaymentsPerYear(); //to throw exception if invalid
+            }
+        }
 
-        public double YearsToMaturity
+        public required string Rating
+        {
+            get => _rating;
+            init
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                    throw new InvalidBondDataException("Rating is required.", BondId, nameof(Rating), value);
+                _rating = value;
+            }
+        }
+
+        public required string Type
+        {
+            get => _type;
+            init
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                    throw new InvalidBondDataException("Type is required.", BondId, nameof(Type), value);
+                _type = value;
+            }
+        }
+
+        public required decimal YearsToMaturity
         {
             get => _yearsToMaturity;
-            set
+            init
             {
                 if (value < 0)
-                    throw new InvalidBondDataException("Years to maturity cannot be negative.", BondID, nameof(YearsToMaturity), value.ToString());
+                    throw new InvalidBondDataException("Years to maturity cannot be negative.", BondId, nameof(YearsToMaturity), value.ToString(CultureInfo.InvariantCulture));
                 _yearsToMaturity = value;
             }
         }
 
-        public decimal DiscountFactor
+        public required decimal DiscountFactor
         {
             get => _discountFactor;
-            set
+            init
             {
                 if (value < 0)
-                    throw new InvalidBondDataException("Discount factor cannot be negative.", BondID, nameof(DiscountFactor), value.ToString());
+                    throw new InvalidBondDataException("Discount factor cannot be negative.", BondId, nameof(DiscountFactor), value.ToString(CultureInfo.InvariantCulture));
                 _discountFactor = value;
             }
         }
 
-        public string DeskNotes { get; set; }
+        public string? DeskNotes { get; init; }
 
         public abstract decimal CalculatePresentValue();
 
-        protected decimal ParseRate(string rateString)
-        {
-            if (string.IsNullOrEmpty(rateString))
-                return 0m;
-
-            if (rateString.Contains("Inflation+"))
-            {
-                string percentagePart = rateString.Replace("Inflation+", "").TrimEnd('%');
-                if (decimal.TryParse(percentagePart, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal spread))
-                {
-                    return spread / 100m;
-                }
-            }
-            else
-            {
-                string cleanRate = rateString.TrimEnd('%');
-                if (decimal.TryParse(cleanRate, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal rate))
-                {
-                    return rate / 100m;
-                }
-            }
-
-            throw new InvalidBondDataException("Invalid rate format.", BondID, nameof(Rate), rateString);
-        }
-
         protected int GetPaymentsPerYear()
         {
-            if (string.IsNullOrEmpty(PaymentFrequency))
+            if (string.IsNullOrWhiteSpace(PaymentFrequency))
                 return 1;
 
-            return PaymentFrequency.ToLower() switch
+            return PaymentFrequency.ToLowerInvariant() switch
             {
                 "quarterly" => 4,
                 "semi-annual" => 2,
                 "annual" => 1,
                 "none" => 0,
-                _ => throw new InvalidBondDataException("Invalid payment frequency.", BondID, nameof(PaymentFrequency), PaymentFrequency)
+                _ => throw new InvalidBondDataException("Invalid payment frequency.", BondId, nameof(PaymentFrequency), PaymentFrequency)
             };
         }
     }

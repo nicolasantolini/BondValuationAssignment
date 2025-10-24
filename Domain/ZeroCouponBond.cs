@@ -11,8 +11,8 @@ namespace Domain
                 return 0m;
 
             // Zero-coupon bonds: PV = ((1 + Rate)^{Years to Maturity} × Face value) × DF
-            decimal rate = ParseRate(Rate);
-            decimal futureValueFactor = (decimal)Math.Pow((double)(1 + rate), YearsToMaturity);
+            decimal rate = Rate.Value;
+            decimal futureValueFactor = (decimal)Math.Pow((double)(1 + rate), (double)YearsToMaturity);
             decimal presentValue = futureValueFactor * FaceValue * DiscountFactor;
 
             return Math.Round(presentValue, 2);

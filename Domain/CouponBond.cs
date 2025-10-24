@@ -15,7 +15,7 @@ namespace Domain
 
         private decimal CalculateCouponBondPresentValue()
         {
-            decimal rate = ParseRate(Rate);
+            decimal rate = Rate.Value;
             int paymentsPerYear = GetPaymentsPerYear();
 
             // Coupon bonds: PV = ((1 + (Rate / Payments per Year))^{Years to Maturity × Payments per Year} × Face value) × DF

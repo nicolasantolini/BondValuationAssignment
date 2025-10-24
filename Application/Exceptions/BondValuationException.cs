@@ -18,7 +18,7 @@ namespace Application.Exceptions
             {
                 if (!string.IsNullOrEmpty(BondID))
                 {
-                    return $"Valuation error for BondID '{BondID}': {base.Message}";
+                    return $"Valuation error for BondId '{BondID}': {base.Message}";
                 }
                 return base.Message;
             }

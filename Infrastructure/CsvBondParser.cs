@@ -25,39 +25,44 @@ namespace Infrastructure
             // CsvHelper does not load all records at once, so we can process them one by one.
             while (csv.Read())
             {
-                CsvBondRecord record = null;
+                BondCreationData? record = null;
                 try
                 {
-                    record = csv.GetRecord<CsvBondRecord>();
+                    record = csv.GetRecord<BondCreationData>();
 
-                    var bond = BondFactory.CreateBond(record.Type);
+                    if (record is null)
+                    {
+                        throw new InvalidOperationException("Failed to read CSV record.");
+                    }
 
-                    // Map properties
-                    bond.BondID = record.BondID;
-                    bond.Issuer = record.Issuer;
-                    bond.Rate = record.Rate;
-                    bond.FaceValue = record.FaceValue;
-                    bond.PaymentFrequency = record.PaymentFrequency;
-                    bond.Rating = record.Rating;
-                    bond.Type = record.Type;
-                    bond.YearsToMaturity = record.YearsToMaturity;
-                    bond.DiscountFactor = record.DiscountFactor;
-                    bond.DeskNotes = record.DeskNotes;
+                    var bondData = new BondCreationData
+                    {
+                        BondId = record.BondId,
+                        Issuer = record.Issuer,
+                        Rate = record.Rate,
+                        FaceValue = record.FaceValue,
+                        PaymentFrequency = record.PaymentFrequency,
+                        Rating = record.Rating,
+                        Type = record.Type,
+                        YearsToMaturity = record.YearsToMaturity,
+                        DiscountFactor = record.DiscountFactor,
+                        DeskNotes = record.DeskNotes
+                    };
 
-
+                    var bond = BondFactory.CreateBond(bondData);
                     result.Bonds.Add(bond);
                 }
                 catch (InvalidBondDataException ex)
                 {
-                    var bondId = record?.BondID ?? "N/A";
+                    var bondId = record?.BondId ?? "N/A";
                     var rowNumber = csv.Parser.Row;
-                    result.Errors.Add($"Invalid data in row {rowNumber}: {ex.Message}");
+                    result.Errors.Add($"Invalid data in row {rowNumber} for Bond '{bondId}': {ex.Message}");
                 }
                 catch (Exception ex)
                 {
-                    var bondId = record?.BondID ?? "N/A";
+                    var bondId = record?.BondId ?? "N/A";
                     var rowNumber = csv.Parser.Row;
-                    result.Errors.Add($"Error parsing row {rowNumber} for BondID '{bondId}': {ex.Message}");
+                    result.Errors.Add($"Error parsing row {rowNumber} for Bond '{bondId}': {ex.Message}");
                 }
             }
 
@@ -65,18 +70,18 @@ namespace Infrastructure
         }
     }
 
-    // Helper class for CSV mapping
-    public class CsvBondRecord
-    {
-        public string BondID { get; set; }
-        public string Issuer { get; set; }
-        public string Rate { get; set; }
-        public decimal FaceValue { get; set; }
-        public string PaymentFrequency { get; set; }
-        public string Rating { get; set; }
-        public string Type { get; set; }
-        public double YearsToMaturity { get; set; }
-        public decimal DiscountFactor { get; set; }
-        public string DeskNotes { get; set; }
-    }
+    //// Helper class for CSV mapping
+    //public class CsvBondRecord
+    //{
+    //    public string BondId { get; set; } = string.Empty;
+    //    public string Issuer { get; set; } = string.Empty;
+    //    public string Rate { get; set; } = string.Empty;
+    //    public decimal FaceValue { get; set; }
+    //    public string PaymentFrequency { get; set; } = string.Empty;
+    //    public string Rating { get; set; } = string.Empty;
+    //    public string Type { get; set; } = string.Empty;
+    //    public double YearsToMaturity { get; set; }
+    //    public decimal DiscountFactor { get; set; }
+    //    public string? DeskNotes { get; set; }
+    //}
 }

@@ -2,15 +2,47 @@
 {
     public static class BondFactory
     {
-        public static Bond CreateBond(string type)
+        public static Bond CreateBond(BondCreationData data)
         {
-            return type?.ToLower() switch
+            var t = data.Type.Trim();
+
+            Bond bond = t switch
             {
-                "bond" => new CouponBond(),
-                "zero-coupon" => new ZeroCouponBond(),
-                "inflation-linked" => new CouponBond(), // Inflation-linked use coupon bond calculation
-                _ => new CouponBond() // Default to coupon bond
+                var s when s.Equals("bond", StringComparison.OrdinalIgnoreCase)
+                        || s.Equals("inflation-linked", StringComparison.OrdinalIgnoreCase) // uses coupon logic
+                    => new CouponBond
+                    {
+                        BondId = data.BondId,
+                        Issuer = data.Issuer,
+                        Rate = Rate.Parse(data.Rate, data.BondId),
+                        FaceValue = data.FaceValue,
+                        PaymentFrequency = data.PaymentFrequency,
+                        Rating = data.Rating,
+                        Type = data.Type,
+                        YearsToMaturity = data.YearsToMaturity,
+                        DiscountFactor = data.DiscountFactor,
+                        DeskNotes = data.DeskNotes
+                    },
+
+                var s when s.Equals("zero-coupon", StringComparison.OrdinalIgnoreCase)
+                    => new ZeroCouponBond
+                    {
+                        BondId = data.BondId,
+                        Issuer = data.Issuer,
+                        Rate = Rate.Parse(data.Rate, data.BondId),
+                        FaceValue = data.FaceValue,
+                        PaymentFrequency = data.PaymentFrequency,
+                        Rating = data.Rating,
+                        Type = data.Type,
+                        YearsToMaturity = data.YearsToMaturity,
+                        DiscountFactor = data.DiscountFactor,
+                        DeskNotes = data.DeskNotes
+                    },
+
+                _ => throw new ArgumentException($"Unknown bond type '{data.Type}'.", nameof(data.Type))
             };
+
+            return bond;
         }
     }
 }

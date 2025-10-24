@@ -4,13 +4,14 @@ namespace Domain.Exceptions
 {
     public class InvalidBondDataException : Exception
     {
-        public string BondID { get; }
-        public string FieldName { get; }
-        public string InvalidValue { get; }
+        public string? BondId { get; }
+        public string? FieldName { get; }
+        public string? InvalidValue { get; }
 
-        public InvalidBondDataException(string message, string bondId = null, string fieldName = null, string invalidValue = null) : base(message)
+        public InvalidBondDataException(string message, string? bondId = null, string? fieldName = null, string? invalidValue = null)
+            : base(message)
         {
-            BondID = bondId;
+            BondId = bondId;
             FieldName = fieldName;
             InvalidValue = invalidValue;
         }
@@ -19,9 +20,9 @@ namespace Domain.Exceptions
         {
             get
             {
-                if (BondID != null && FieldName != null)
+                if (BondId != null && FieldName != null)
                 {
-                    return $"Error processing BondID '{BondID}': Invalid value '{InvalidValue}' for field '{FieldName}'. {base.Message}";
+                    return $"Error processing BondId '{BondId}': Invalid value '{InvalidValue}' for field '{FieldName}'. {base.Message}";
                 }
                 return base.Message;
             }
