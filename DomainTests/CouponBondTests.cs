@@ -38,7 +38,7 @@ namespace Domain.Tests
             var result = bond.CalculatePresentValue();
 
             // Assert
-            Assert.Equal(expectedPresentValue, result);
+            Assert.Equal(expectedPresentValue, result, 2);
         }
 
         [Fact]

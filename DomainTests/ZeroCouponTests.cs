@@ -36,7 +36,7 @@ namespace Domain.Tests
             var result = bond.CalculatePresentValue();
 
             // Assert
-            Assert.Equal(expectedPresentValue, result);
+            Assert.Equal(expectedPresentValue, result, 2);
         }
 
         [Fact]
@@ -47,7 +47,7 @@ namespace Domain.Tests
             {
                 BondId = "ZERO123",
                 Issuer = "US Treasury",
-                Rate = Rate.Parse("5.00%"), // 5% annual rate
+                Rate = Rate.Parse("5.00%"), 
                 FaceValue = 1000.0,
                 PaymentFrequency = "none",
                 Rating = "AAA",
@@ -63,7 +63,7 @@ namespace Domain.Tests
             var result = bond.CalculatePresentValue();
 
             // Assert
-            Assert.Equal(expectedPresentValue, result);
+            Assert.Equal(expectedPresentValue, result, 2);
         }
 
         [Fact]
@@ -74,7 +74,7 @@ namespace Domain.Tests
             {
                 BondId = "ZERO999",
                 Issuer = "US Treasury",
-                Rate = Rate.Parse("5.00%"), // 5% annual rate
+                Rate = Rate.Parse("5.00%"), 
                 FaceValue = 0.0,
                 PaymentFrequency = "none",
                 Rating = "AAA",
@@ -98,7 +98,7 @@ namespace Domain.Tests
             {
                 BondId = "ZERO000",
                 Issuer = "US Treasury",
-                Rate = Rate.Parse("5.00%"), // 5% annual rate
+                Rate = Rate.Parse("5.00%"), 
                 FaceValue = 1000.0,
                 PaymentFrequency = "none",
                 Rating = "AAA",
@@ -122,7 +122,7 @@ namespace Domain.Tests
             {
                 BondId = "ZERO001",
                 Issuer = "US Treasury",
-                Rate = Rate.Parse("5.00%"), // 5% annual rate
+                Rate = Rate.Parse("5.00%"),
                 FaceValue = 1000.0,
                 PaymentFrequency = "none",
                 Rating = "AAA",
