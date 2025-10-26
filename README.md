@@ -96,7 +96,7 @@ curl -X POST "https://bond-valuation-api.orangedune-ba3ed3c8.northeurope.azureco
 curl -X POST "https://bond-valuation-api.orangedune-ba3ed3c8.northeurope.azurecontainerapps.io/api/BondValuation/?format=csv" \
   -H "Content-Type: text/csv" \
   --data-binary @bond_positions_sample.csv
-'''
+```
 
 ## Configuration
 - Ports: configured in appsettings.json or environment variables (e.g., ASPNETCORE_URLS)
