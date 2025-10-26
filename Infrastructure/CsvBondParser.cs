@@ -1,11 +1,46 @@
 ﻿using CsvHelper;
 using CsvHelper.Configuration;
+using CsvHelper.TypeConversion;
 using Domain;
 using Domain.Exceptions;
 using System.Globalization;
 
 namespace Infrastructure
 {
+    public class FlexibleDoubleConverter : DoubleConverter
+    {
+        //Helper class to handle both comma and period as decimal separators in the CSV files (given DiscountFactor case)
+        public override object? ConvertFromString(string? text, IReaderRow row, MemberMapData memberMapData)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                return base.ConvertFromString(text, row, memberMapData);
+            }
+
+            var style = memberMapData.TypeConverterOptions.NumberStyles ?? NumberStyles.Float | NumberStyles.AllowThousands;
+            
+            // If the number contains a comma, try to parse it using a culture that uses a comma as a decimal separator.
+            if (text.Contains(','))
+            {
+                var cultureWithComma = new CultureInfo("fr-FR"); // fr-FR uses ',' as a decimal separator.
+                if (double.TryParse(text, style, cultureWithComma, out var result))
+                {
+                    return result;
+                }
+            }
+
+            // Otherwise, or if the above failed, try to parse using the invariant culture (which expects a '.' decimal separator).
+            var culture = memberMapData.TypeConverterOptions.CultureInfo ?? CultureInfo.InvariantCulture;
+            if (double.TryParse(text, style, culture, out var resultInvariant))
+            {
+                return resultInvariant;
+            }
+
+            // Fallback to the base converter to handle potential exceptions.
+            return base.ConvertFromString(text, row, memberMapData);
+        }
+    }
+
     public class CsvBondParser : IBondParser
     {
         public BondParsingResult ParseBonds(string filePath)
@@ -20,6 +55,7 @@ namespace Infrastructure
 
             using var reader = new StreamReader(filePath);
             using var csv = new CsvReader(reader, config);
+            csv.Context.TypeConverterCache.AddConverter<double>(new FlexibleDoubleConverter());
 
             try
             {
