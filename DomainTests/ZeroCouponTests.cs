@@ -12,12 +12,12 @@ namespace Domain.Tests
                 BondId = "ZERO001",
                 Issuer = "US Treasury",
                 Rate = Rate.Parse("5.00%"), // 5% annual rate
-                FaceValue = 1000m,
+                FaceValue = 1000.0,
                 PaymentFrequency = "none", // Zero-coupon typically has no periodic payments
                 Rating = "AAA",
                 Type = "Government",
-                YearsToMaturity = 10m,
-                DiscountFactor = 1.0m // No additional discount for simplicity
+                YearsToMaturity = 10.0,
+                DiscountFactor = 1.0 // No additional discount for simplicity
             };
         }
 
@@ -30,7 +30,7 @@ namespace Domain.Tests
             // Expected calculation: PV = (1 + 0.05)^10 × 1000 × 1.0
             // (1.05)^10 ≈ 1.628894626777441
             // 1000 × 1.628894626777441 ≈ 1628.89
-            decimal expectedPresentValue = 1628.89m;
+            double expectedPresentValue = 1628.89;
 
             // Act
             var result = bond.CalculatePresentValue();
@@ -48,16 +48,16 @@ namespace Domain.Tests
                 BondId = "ZERO123",
                 Issuer = "US Treasury",
                 Rate = Rate.Parse("5.00%"), // 5% annual rate
-                FaceValue = 1000m,
+                FaceValue = 1000.0,
                 PaymentFrequency = "none",
                 Rating = "AAA",
                 Type = "Government",
-                YearsToMaturity = 10m,
-                DiscountFactor = 0.9m // 10% discount
+                YearsToMaturity = 10.0,
+                DiscountFactor = 0.9 // 10% discount
             };
 
             // Expected: (1.05)^10 × 1000 × 0.9 ≈ 1628.89 × 0.9 = 1466.01
-            decimal expectedPresentValue = 1466.01m;
+            double expectedPresentValue = 1466.01;
 
             // Act
             var result = bond.CalculatePresentValue();
@@ -75,19 +75,19 @@ namespace Domain.Tests
                 BondId = "ZERO999",
                 Issuer = "US Treasury",
                 Rate = Rate.Parse("5.00%"), // 5% annual rate
-                FaceValue = 0m,
+                FaceValue = 0.0,
                 PaymentFrequency = "none",
                 Rating = "AAA",
                 Type = "Government",
-                YearsToMaturity = 10m,
-                DiscountFactor = 1.0m
+                YearsToMaturity = 10.0,
+                DiscountFactor = 1.0
             };
 
             // Act
             var result = bond.CalculatePresentValue();
 
             // Assert
-            Assert.Equal(0m, result);
+            Assert.Equal(0.0, result);
         }
 
         [Fact]
@@ -99,19 +99,19 @@ namespace Domain.Tests
                 BondId = "ZERO000",
                 Issuer = "US Treasury",
                 Rate = Rate.Parse("5.00%"), // 5% annual rate
-                FaceValue = 1000m,
+                FaceValue = 1000.0,
                 PaymentFrequency = "none",
                 Rating = "AAA",
                 Type = "Government",
-                YearsToMaturity = 10m,
-                DiscountFactor = 0m
+                YearsToMaturity = 10.0,
+                DiscountFactor = 0.0
             };
 
             // Act
             var result = bond.CalculatePresentValue();
 
             // Assert
-            Assert.Equal(0m, result);
+            Assert.Equal(0.0, result);
         }
 
         [Fact]
@@ -123,16 +123,16 @@ namespace Domain.Tests
                 BondId = "ZERO001",
                 Issuer = "US Treasury",
                 Rate = Rate.Parse("5.00%"), // 5% annual rate
-                FaceValue = 1000m,
+                FaceValue = 1000.0,
                 PaymentFrequency = "none",
                 Rating = "AAA",
                 Type = "Government",
-                YearsToMaturity = 0m,
-                DiscountFactor = 0.95m
+                YearsToMaturity = 0.0,
+                DiscountFactor = 0.95
             };
 
             // Expected: (1.05)^0 × 1000 × 0.95 = 1 × 1000 × 0.95 = 950.00
-            decimal expectedPresentValue = 950.00m;
+            double expectedPresentValue = 950.00;
 
             // Act
             var result = bond.CalculatePresentValue();
@@ -150,16 +150,16 @@ namespace Domain.Tests
                 BondId = "ZERO002",
                 Issuer = "US Treasury",
                 Rate = Rate.Parse("0.00%"), // 0% annual rate
-                FaceValue = 1000m,
+                FaceValue = 1000.0,
                 PaymentFrequency = "none",
                 Rating = "AAA",
                 Type = "Government",
-                YearsToMaturity = 10m,
-                DiscountFactor = 0.9m
+                YearsToMaturity = 10.0,
+                DiscountFactor = 0.9
             };
 
             // Expected: (1 + 0)^10 × 1000 × 0.9 = 1 × 1000 × 0.9 = 900.00
-            decimal expectedPresentValue = 900.00m;
+            double expectedPresentValue = 900.00;
 
             // Act
             var result = bond.CalculatePresentValue();
