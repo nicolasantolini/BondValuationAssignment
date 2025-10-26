@@ -44,7 +44,7 @@ curl http://localhost:8080/health
 ```
 
 
-### API (examples)
+### API (all endpoints)
 - GET /health
   - 200 OK
 - POST /
