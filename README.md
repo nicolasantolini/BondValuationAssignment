@@ -4,9 +4,9 @@ This service accepts structured CSV bond position files, validates them, and com
 
 ### Features
 - Parse structured CSV bond records
-- Calculate bond present value (coupon-bearing and zero-coupon)
+- Calculate bond present value (coupon and zero-coupon)
 - Return output in JSON or CSV
-- Track and surface validation/errors with root-cause details
+- Track errors with root-cause details
 - Docker image for easy deployment
 
 ## Prerequisites
@@ -89,7 +89,7 @@ You can use the **bond_positions_sample.csv** from this repo for the body.
 ```bash
 # JSON response
 curl -X POST "https://bond-valuation-api.orangedune-ba3ed3c8.northeurope.azurecontainerapps.io/api/BondValuation/?format=json" \
-  -H "Content-Type: text/csv" \
+  -H "Content-Type: application/json" \
   --data-binary @bond_positions_sample.csv
 
 # CSV response  
