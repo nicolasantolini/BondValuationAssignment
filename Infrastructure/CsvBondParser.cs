@@ -21,6 +21,17 @@ namespace Infrastructure
             using var reader = new StreamReader(filePath);
             using var csv = new CsvReader(reader, config);
 
+            try
+            {
+                csv.Read();
+                csv.ReadHeader();
+                csv.ValidateHeader<BondCreationData>();
+            }
+            catch (HeaderValidationException ex)
+            {
+                throw new InvalidDataException("The CSV file has invalid headers. Please check the file structure.", ex);
+            }
+
 
             while (csv.Read())
             {

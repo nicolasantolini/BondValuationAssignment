@@ -22,6 +22,9 @@ namespace Application.Controllers
             if (file == null || file.Length == 0)
                 return BadRequest("No file was uploaded");
 
+            if (!file.FileName.EndsWith(".csv", StringComparison.OrdinalIgnoreCase))
+                return BadRequest("Only CSV files are supported");
+
             // Save the uploaded file temporarily
             var tempFilePath = Path.GetTempFileName();
             try
