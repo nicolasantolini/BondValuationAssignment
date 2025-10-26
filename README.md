@@ -10,7 +10,7 @@ This service accepts structured CSV bond position files, validates them, and com
 - Docker image for easy deployment
 
 ## Prerequisites
-- .NET SDK 8.0 (or specify the supported version)
+- .NET SDK 8.0
 - Docker (optional, for container runs)
 
 ## Quick start (local)
@@ -43,7 +43,20 @@ docker run -p 8080:8080 bondvaluationservice
 curl http://localhost:8080/health
 ```
 
-## Example Case
+
+### API (examples)
+- GET /health
+  - 200 OK
+- POST /
+  - Accepts: multipart/form-data file upload (CSV)
+  - Returns: application/json with computed results and detailed errors, or text/csv without errors
+- GET /swagger
+  - OpenAPI / Swagger UI (when enabled) for interactive docs
+ 
+## API Testing
+**Live Endpoint:**  
+`POST https://bond-valuation-api.orangedune-ba3ed3c8.northeurope.azurecontainerapps.io/api/BondValuation/`
+
 ### Sample CSV input
 Provide a header row with these columns (example):
 <img width="2368" height="88" alt="image" src="https://github.com/user-attachments/assets/8d14d987-9ebe-4dfe-abbd-b95543d7be14" />
@@ -69,38 +82,23 @@ Provide a header row with these columns (example):
 }
 ```
 
-### API (examples)
-- GET /health
-  - 200 OK
-- POST /
-  - Accepts: multipart/form-data file upload (CSV)
-  - Returns: application/json with computed results and detailed errors, or text/csv without errors
-- GET /swagger
-  - OpenAPI / Swagger UI (when enabled) for interactive docs
- 
-## API Testing
-
-**Live Endpoint:**  
-`POST https://bond-valuation-api.orangedune-ba3ed3c8.northeurope.azurecontainerapps.io/api/BondValuation/`
-
 ### Quick Test
 You can use the **bond_positions_sample.csv** from this repo for the body.
 
 ```bash
 # JSON response
-curl -X POST "https://bond-valuation-api.orangedune-ba3ed3c8.northeurope.azurecontainerapps.io/api/BondValuation/?format=json" \
+curl -X POST "https://bond-valuation-api.orangedune-ba3ed3c8.northeurope.azurecontainerapps.io/api/BondValuation/" \
   -H "Content-Type: application/json" \
   --data-binary @bond_positions_sample.csv
 
 # CSV response  
-curl -X POST "https://bond-valuation-api.orangedune-ba3ed3c8.northeurope.azurecontainerapps.io/api/BondValuation/?format=csv" \
+curl -X POST "https://bond-valuation-api.orangedune-ba3ed3c8.northeurope.azurecontainerapps.io/api/BondValuation/" \
   -H "Content-Type: text/csv" \
   --data-binary @bond_positions_sample.csv
 ```
 
 ## Configuration
 - Ports: configured in appsettings.json or environment variables (e.g., ASPNETCORE_URLS)
-- Logging: configured via appsettings.{Environment}.json
 
 ## Error handling
 - Validation errors are returned per-record with root-cause diagnostics (column, value, rule).
