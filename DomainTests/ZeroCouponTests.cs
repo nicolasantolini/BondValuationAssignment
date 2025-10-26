@@ -1,7 +1,4 @@
-﻿using Domain;
-using Xunit;
-
-namespace Domain.Tests
+﻿namespace Domain.Tests
 {
     public class ZeroCouponBondTests
     {

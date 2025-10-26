@@ -1,7 +1,4 @@
-﻿using System;
-using System.Globalization;
-
-namespace Domain
+﻿namespace Domain
 {
     public class ZeroCouponBond : Bond
     {
