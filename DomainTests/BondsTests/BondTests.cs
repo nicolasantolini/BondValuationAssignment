@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace DomainTests.BondsTests
 {
+    //This class is to test basic creation and property assignments of Bond
     public class BondTests
     {
         private TestBond CreateValidBond()
@@ -16,12 +17,12 @@ namespace DomainTests.BondsTests
                 BondId = "BOND001",
                 Issuer = "US Treasury",
                 Rate = Rate.Parse("5.70%"), 
-                FaceValue = 1000m,
+                FaceValue = 1000.0,
                 PaymentFrequency = "annual",
                 Rating = "AAA",
                 Type = "Coupon",
-                YearsToMaturity = 10m,
-                DiscountFactor = 0.95m
+                YearsToMaturity = 10.0,
+                DiscountFactor = 0.95
             };
         }
 
@@ -34,19 +35,19 @@ namespace DomainTests.BondsTests
             // Assert
             Assert.Equal("BOND001", bond.BondId);
             Assert.Equal("US Treasury", bond.Issuer);
-            Assert.Equal(0.057m, bond.Rate.Value);
-            Assert.Equal(1000m, bond.FaceValue);
+            Assert.Equal(0.057, bond.Rate.Value);
+            Assert.Equal(1000.0, bond.FaceValue);
             Assert.Equal("annual", bond.PaymentFrequency);
             Assert.Equal("AAA", bond.Rating);
             Assert.Equal("Coupon", bond.Type);
-            Assert.Equal(10m, bond.YearsToMaturity);
-            Assert.Equal(0.95m, bond.DiscountFactor);
+            Assert.Equal(10.0, bond.YearsToMaturity);
+            Assert.Equal(0.95, bond.DiscountFactor);
         }
     }
 
     public class TestBond : Bond
     {
-        public override decimal CalculatePresentValue()
+        public override double CalculatePresentValue()
         {
             // Simple implementation for testing base class functionality
             return FaceValue * DiscountFactor;

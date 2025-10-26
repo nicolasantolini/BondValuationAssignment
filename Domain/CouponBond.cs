@@ -2,30 +2,30 @@
 {
     public class CouponBond : Bond
     {
-        public override decimal CalculatePresentValue()
+        public override double CalculatePresentValue()
         {
             if (FaceValue == 0 || DiscountFactor == 0)
-                return 0m;
+                return 0.0;
 
             return CalculateCouponBondPresentValue();
         }
 
-        private decimal CalculateCouponBondPresentValue()
+        private double CalculateCouponBondPresentValue()
         {
-            decimal rate = Rate.Value;
+            double rate = Rate.Value;
             int paymentsPerYear = GetPaymentsPerYear();
 
             // Coupon bonds: PV = ((1 + (Rate / Payments per Year))^{Years to Maturity × Payments per Year} × Face value) × DF
-            decimal couponPerPeriod = rate / paymentsPerYear;
-            decimal numberOfPeriods = YearsToMaturity * paymentsPerYear;
+            double couponPerPeriod = rate / paymentsPerYear;
+            double numberOfPeriods = YearsToMaturity * paymentsPerYear;
 
-            double baseValue = 1.0 + (double)couponPerPeriod;
-            double exponent = (double)numberOfPeriods;
+            double baseValue = 1.0 + couponPerPeriod;
+            double exponent = numberOfPeriods;
             double futureValueFactor = Math.Pow(baseValue, exponent);
 
-            decimal presentValue = (decimal)futureValueFactor * FaceValue * DiscountFactor;
+            double presentValue = futureValueFactor * FaceValue * DiscountFactor;
 
-            return Math.Round(presentValue, 2);
+            return presentValue;
         }
 
         

@@ -15,7 +15,7 @@ namespace DomainTests
             var rate = Rate.Parse(rateString);
 
             // Assert
-            Assert.Equal(0m, rate.Value);
+            Assert.Equal(0.0, rate.Value);
         }
 
         [Theory]
@@ -31,7 +31,7 @@ namespace DomainTests
             var rate = Rate.Parse(rateString);
 
             // Assert
-            Assert.Equal((decimal)expectedValue, rate.Value);
+            Assert.Equal(expectedValue, rate.Value);
         }
 
         [Fact]

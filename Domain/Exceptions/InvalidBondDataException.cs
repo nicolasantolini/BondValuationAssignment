@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Domain.Exceptions
+﻿namespace Domain.Exceptions
 {
     public class InvalidBondDataException : Exception
     {

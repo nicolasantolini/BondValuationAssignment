@@ -18,12 +18,12 @@ namespace DomainTests.BondsTests
                 BondId = "BOND001",
                 Issuer = "Test Issuer",
                 Rate = Rate.Parse("5.00%"),
-                FaceValue = 1000m,
+                FaceValue = 1000.0,
                 PaymentFrequency = frequency,
                 Rating = "AA",
                 Type = "Coupon",
-                YearsToMaturity = 10m,
-                DiscountFactor = 0.95m
+                YearsToMaturity = 10.0,
+                DiscountFactor = 0.95
             };
 
             // Act
@@ -48,12 +48,12 @@ namespace DomainTests.BondsTests
                     BondId = "BOND001",
                     Issuer = "Test Issuer",
                     Rate = Rate.Parse("5.00%"),
-                    FaceValue = 1000m,
+                    FaceValue = 1000.0,
                     PaymentFrequency = invalidFrequency,
                     Rating = "AA",
                     Type = "Coupon",
-                    YearsToMaturity = 10m,
-                    DiscountFactor = 0.95m
+                    YearsToMaturity = 10.0,
+                    DiscountFactor = 0.95
                 };
             });
 
@@ -71,12 +71,12 @@ namespace DomainTests.BondsTests
                     BondId = "BOND001",
                     Issuer = "Test Issuer",
                     Rate = Rate.Parse("5.00%"),
-                    FaceValue = 1000m,
+                    FaceValue = 1000.0,
                     PaymentFrequency = "invalid-frequency",
                     Rating = "AA",
                     Type = "Coupon",
-                    YearsToMaturity = 10m,
-                    DiscountFactor = 0.95m
+                    YearsToMaturity = 10.0,
+                    DiscountFactor = 0.95
                 };
             });
         }

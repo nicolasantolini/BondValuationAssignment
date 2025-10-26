@@ -5,20 +5,20 @@ namespace Domain
 {
     public record Rate
     {
-        public decimal Value { get; init; }
+        public double Value { get; init; }
 
         public static Rate Parse(string rateString, string? bondId = null)
         {
             if (string.IsNullOrWhiteSpace(rateString))
             {
-                return new Rate { Value = 0m};
+                return new Rate { Value = 0.0};
             }
 
             rateString = rateString.Trim().TrimEnd('%');
 
-            if (decimal.TryParse(rateString, NumberStyles.Any, CultureInfo.InvariantCulture, out var value))
+            if (double.TryParse(rateString, NumberStyles.Any, CultureInfo.InvariantCulture, out var value))
             {
-                return new Rate { Value = value / 100m};
+                return new Rate { Value = value / 100.0};
             }
 
             throw new InvalidBondDataException("Invalid rate format.", bondId, nameof(Rate), rateString);

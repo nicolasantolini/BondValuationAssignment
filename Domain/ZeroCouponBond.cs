@@ -5,17 +5,17 @@ namespace Domain
 {
     public class ZeroCouponBond : Bond
     {
-        public override decimal CalculatePresentValue()
+        public override double CalculatePresentValue()
         {
             if (FaceValue == 0 || DiscountFactor == 0)
-                return 0m;
+                return 0.0;
 
             // Zero-coupon bonds: PV = ((1 + Rate)^{Years to Maturity} × Face value) × DF
-            decimal rate = Rate.Value;
-            decimal futureValueFactor = (decimal)Math.Pow((double)(1 + rate), (double)YearsToMaturity);
-            decimal presentValue = futureValueFactor * FaceValue * DiscountFactor;
+            double rate = Rate.Value;
+            double futureValueFactor = Math.Pow(1 + rate, YearsToMaturity);
+            double presentValue = futureValueFactor * FaceValue * DiscountFactor;
 
-            return Math.Round(presentValue, 2);
+            return presentValue;
         }
 
     }

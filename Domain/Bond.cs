@@ -5,9 +5,9 @@ namespace Domain
 {
     public abstract class Bond
     {
-        private decimal _faceValue;
-        private decimal _yearsToMaturity;
-        private decimal _discountFactor;
+        private double _faceValue;
+        private double _yearsToMaturity;
+        private double _discountFactor;
         private string _paymentFrequency = "";
         private Rate _rate = null!;
         private string _bondId = "";
@@ -43,7 +43,7 @@ namespace Domain
             init => _rate = value;
         }
 
-        public required decimal FaceValue
+        public required double FaceValue
         {
             get => _faceValue;
             init
@@ -88,7 +88,7 @@ namespace Domain
             }
         }
 
-        public required decimal YearsToMaturity
+        public required double YearsToMaturity
         {
             get => _yearsToMaturity;
             init
@@ -99,7 +99,7 @@ namespace Domain
             }
         }
 
-        public required decimal DiscountFactor
+        public required double DiscountFactor
         {
             get => _discountFactor;
             init
@@ -114,7 +114,7 @@ namespace Domain
 
         public string? DeskNotes { get; init; }
 
-        public abstract decimal CalculatePresentValue();
+        public abstract double CalculatePresentValue();
 
         public int GetPaymentsPerYear()
         {

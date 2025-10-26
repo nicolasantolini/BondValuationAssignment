@@ -1,6 +1,5 @@
 ﻿using Infrastructure;
 using Application.DTOs;
-using Application.Exceptions;
 
 namespace Application.Services
 {
@@ -40,16 +39,12 @@ namespace Application.Services
                     {
                         BondId = bond.BondId,
                         Type = bond.Type,
-                        PresentValue = bond.CalculatePresentValue(),
+                        PresentValue = Math.Round(bond.CalculatePresentValue(), 2),
                         Issuer = bond.Issuer,
                         Rating = bond.Rating,
                         YearsToMaturity = bond.YearsToMaturity,
-                        DeskNotes = bond.DeskNotes?.Trim() ?? string.Empty
+                        DeskNotes = bond.DeskNotes ?? string.Empty
                     });
-                }
-                catch (BondValuationException ex)
-                {
-                    errors.Add(ex.Message);
                 }
                 catch (Exception ex)
                 {
@@ -60,7 +55,7 @@ namespace Application.Services
             return new BondValuationResultDTO
             {
                 Results = valuationResults,
-                Errors = bondParsingResult.Errors
+                Errors = errors
             };
         }
 

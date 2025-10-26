@@ -12,12 +12,12 @@ namespace DomainTests.BondsTests
                 BondId = "BOND001",
                 Issuer = "US Treasury",
                 Rate = Rate.Parse("5.70%"),
-                FaceValue = 1000m,
+                FaceValue = 1000.0,
                 PaymentFrequency = "annual",
                 Rating = "AAA",
                 Type = "Coupon",
-                YearsToMaturity = 10m,
-                DiscountFactor = 0.95m
+                YearsToMaturity = 10.0,
+                DiscountFactor = 0.95
             };
         }
 
@@ -53,7 +53,7 @@ namespace DomainTests.BondsTests
         [Theory]
         [InlineData(-1000)]
         [InlineData(-0.01)]
-        public void FaceValue_WhenNegative_ThrowsException(decimal invalidFaceValue)
+        public void FaceValue_WhenNegative_ThrowsException(double invalidFaceValue)
         {
             // Arrange
             var bond = CreateValidBond();
@@ -81,7 +81,7 @@ namespace DomainTests.BondsTests
         [Theory]
         [InlineData(-1)]
         [InlineData(-0.5)]
-        public void YearsToMaturity_WhenNegative_ThrowsException(decimal invalidYears)
+        public void YearsToMaturity_WhenNegative_ThrowsException(double invalidYears)
         {
             // Arrange
             var bond = CreateValidBond();
@@ -110,7 +110,7 @@ namespace DomainTests.BondsTests
         [InlineData(-0.1)]
         [InlineData(1.1)]
         [InlineData(2.0)]
-        public void DiscountFactor_WhenInvalid_ThrowsException(decimal invalidFactor)
+        public void DiscountFactor_WhenInvalid_ThrowsException(double invalidFactor)
         {
             // Arrange
             var bond = CreateValidBond();
