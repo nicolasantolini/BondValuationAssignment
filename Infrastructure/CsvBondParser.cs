@@ -81,21 +81,7 @@ namespace Infrastructure
                         throw new InvalidOperationException("Failed to read CSV record.");
                     }
 
-                    var bondData = new BondCreationData
-                    {
-                        BondID = record.BondID,
-                        Issuer = record.Issuer,
-                        Rate = record.Rate,
-                        FaceValue = record.FaceValue,
-                        PaymentFrequency = record.PaymentFrequency,
-                        Rating = record.Rating,
-                        Type = record.Type,
-                        YearsToMaturity = record.YearsToMaturity,
-                        DiscountFactor = record.DiscountFactor,
-                        DeskNotes = record.DeskNotes
-                    };
-
-                    var bond = BondFactory.CreateBond(bondData);
+                    var bond = BondFactory.CreateBond(record);
                     result.Bonds.Add(bond);
                 }
                 catch (InvalidBondDataException ex)

@@ -1,4 +1,6 @@
-﻿namespace Domain
+﻿using Domain.Exceptions;
+
+namespace Domain
 {
     public class CouponBond : Bond
     {
@@ -14,6 +16,9 @@
         {
             double rate = Rate.Value;
             int paymentsPerYear = GetPaymentsPerYear();
+
+            if(paymentsPerYear <= 0)
+                throw new InvalidBondDataException("Invalid payment frequency for coupon bond.", BondId, nameof(PaymentFrequency), PaymentFrequency);
 
             // Coupon bonds: PV = ((1 + (Rate / Payments per Year))^{Years to Maturity × Payments per Year} × Face value) × DF
             double couponPerPeriod = rate / paymentsPerYear;

@@ -42,7 +42,7 @@ namespace Application.Controllers
 
                 if (acceptHeader.Contains("text/csv"))
                 {
-                    return File(GenerateCsv(results.Results), "text/csv", "bond_valuations_" + DateTime.Now.ToString("yyyyMMdd") + ".csv");
+                    return File(GenerateCsv(results.Results), "text/csv", "bond_valuations_" + DateTime.UtcNow.ToString("yyyyMMdd") + ".csv");
                 }
                 
                 // Default to JSON
