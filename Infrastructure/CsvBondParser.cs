@@ -7,7 +7,7 @@ using System.Globalization;
 
 namespace Infrastructure
 {
-    public class FlexibleDoubleConverter : DoubleConverter
+    public class FlexibleDecimalConverter : DoubleConverter
     {
         //Helper class to handle both comma and period as decimal separators in the CSV files (given DiscountFactor case)
         public override object? ConvertFromString(string? text, IReaderRow row, MemberMapData memberMapData)
@@ -23,7 +23,7 @@ namespace Infrastructure
             if (text.Contains(','))
             {
                 var cultureWithComma = new CultureInfo("fr-FR"); // fr-FR uses ',' as a decimal separator.
-                if (double.TryParse(text, style, cultureWithComma, out var result))
+                if (decimal.TryParse(text, style, cultureWithComma, out var result))
                 {
                     return result;
                 }
@@ -31,7 +31,7 @@ namespace Infrastructure
 
             // Otherwise, or if the above failed, try to parse using the invariant culture (which expects a '.' decimal separator).
             var culture = memberMapData.TypeConverterOptions.CultureInfo ?? CultureInfo.InvariantCulture;
-            if (double.TryParse(text, style, culture, out var resultInvariant))
+            if (decimal.TryParse(text, style, culture, out var resultInvariant))
             {
                 return resultInvariant;
             }
@@ -55,7 +55,7 @@ namespace Infrastructure
 
             using var reader = new StreamReader(filePath);
             using var csv = new CsvReader(reader, config);
-            csv.Context.TypeConverterCache.AddConverter<double>(new FlexibleDoubleConverter());
+            csv.Context.TypeConverterCache.AddConverter<decimal>(new FlexibleDecimalConverter());
 
             try
             {

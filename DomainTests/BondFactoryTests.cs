@@ -13,12 +13,12 @@ namespace Domain.Tests
                 BondID = "TEST001",
                 Issuer = "Test Issuer",
                 Rate = "5%",
-                FaceValue = 1000.0,
+                FaceValue = 1000m,
                 PaymentFrequency = "annual",
                 Rating = "AAA",
                 Type = type,
-                YearsToMaturity = 10.0,
-                DiscountFactor = 0.95,
+                YearsToMaturity = 10m,
+                DiscountFactor = 0.95m,
                 DeskNotes = "Test notes"
             };
         }

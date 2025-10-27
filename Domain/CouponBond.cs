@@ -4,33 +4,34 @@ namespace Domain
 {
     public class CouponBond : Bond
     {
-        public override double CalculatePresentValue()
+        public override decimal CalculatePresentValue()
         {
             if (FaceValue == 0 || DiscountFactor == 0)
-                return 0.0;
+                return 0m;
 
             return CalculateCouponBondPresentValue();
         }
 
-        private double CalculateCouponBondPresentValue()
+        private decimal CalculateCouponBondPresentValue()
         {
-            double rate = Rate.Value;
+            double rate = (double)Rate.Value;
             int paymentsPerYear = GetPaymentsPerYear();
 
-            if(paymentsPerYear <= 0)
+            if (paymentsPerYear <= 0)
                 throw new InvalidBondDataException("Invalid payment frequency for coupon bond.", BondId, nameof(PaymentFrequency), PaymentFrequency);
 
             // Coupon bonds: PV = ((1 + (Rate / Payments per Year))^{Years to Maturity × Payments per Year} × Face value) × DF
             double couponPerPeriod = rate / paymentsPerYear;
-            double numberOfPeriods = YearsToMaturity * paymentsPerYear;
+            double numberOfPeriods = (double)YearsToMaturity * paymentsPerYear;
 
-            double baseValue = 1.0 + couponPerPeriod;
-            double exponent = numberOfPeriods;
-            double futureValueFactor = Math.Pow(baseValue, exponent);
+            double baseValue = 1d + couponPerPeriod;
+            double futureValueFactor = Math.Pow(baseValue, numberOfPeriods);
 
-            double presentValue = futureValueFactor * FaceValue * DiscountFactor;
+            double presentValue = futureValueFactor * (double)FaceValue * (double)DiscountFactor;
 
-            return presentValue;
+            //Preserving accuracy up to 4 decimal places
+            decimal finalPresentValue = (decimal)Math.Round(presentValue * 10000) / 10000m;
+            return finalPresentValue;
         }
 
         

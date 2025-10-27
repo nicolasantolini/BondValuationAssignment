@@ -9,12 +9,12 @@
                 BondId = "COUPON001",
                 Issuer = "Test Issuer",
                 Rate = Rate.Parse("5.00%"),
-                FaceValue = 1000.0,
+                FaceValue = 1000m,
                 PaymentFrequency = "semi-annual",
                 Rating = "AA",
                 Type = "Corporate",
-                YearsToMaturity = 5.0,
-                DiscountFactor = 0.95
+                YearsToMaturity = 5m,
+                DiscountFactor = 0.95m
             };
         }
 
@@ -29,7 +29,7 @@
             // Number of periods: 5 years * 2 = 10 periods
             // Future value factor: (1 + 0.025)^10 ≈ 1.2800845
             // Present value: 1000 * 1.2800845 * 0.95 ≈ 1216.08
-            double expectedPresentValue = 1216.08;
+            decimal expectedPresentValue = 1216.08m;
 
             // Act
             var result = bond.CalculatePresentValue();
@@ -47,12 +47,12 @@
                 BondId = "COUPON002",
                 Issuer = "Test Issuer",
                 Rate = Rate.Parse("5.00%"),
-                FaceValue = 0.0,
+                FaceValue = 0m,
                 PaymentFrequency = "annual",
                 Rating = "AA",
                 Type = "Corporate",
-                YearsToMaturity = 5.0,
-                DiscountFactor = 0.95
+                YearsToMaturity = 5m,
+                DiscountFactor = 0.95m
             };
 
             // Act
@@ -71,19 +71,19 @@
                 BondId = "COUPON003",
                 Issuer = "Test Issuer",
                 Rate = Rate.Parse("5.00%"),
-                FaceValue = 1000.0,
+                FaceValue = 1000m,
                 PaymentFrequency = "annual",
                 Rating = "AA",
                 Type = "Corporate",
-                YearsToMaturity = 5.0,
-                DiscountFactor = 0.0
+                YearsToMaturity = 5m,
+                DiscountFactor = 0m
             };  
 
             // Act
             var result = bond.CalculatePresentValue();
 
             // Assert
-            Assert.Equal(0.0, result);
+            Assert.Equal(0m, result);
         }
 
         [Fact]
@@ -95,12 +95,12 @@
                 BondId = "COUPON005",
                 Issuer = "Test Issuer",
                 Rate = Rate.Parse("3.00%"),
-                FaceValue = 1000.0,
+                FaceValue = 1000m,
                 PaymentFrequency = "annual",
                 Rating = "AA",
                 Type = "Corporate",
-                YearsToMaturity = 5.0,
-                DiscountFactor = 0.95
+                YearsToMaturity = 5m,
+                DiscountFactor = 0.95m
             };
             var highRateBond = new CouponBond
             {
@@ -111,8 +111,8 @@
                 PaymentFrequency = "annual",
                 Rating = "AA",
                 Type = "Corporate",
-                YearsToMaturity = 5.0,
-                DiscountFactor = 0.95
+                YearsToMaturity = 5m,
+                DiscountFactor = 0.95m
             };
 
             // Act
@@ -132,24 +132,24 @@
                 BondId = "COUPON007",
                 Issuer = "Test Issuer",
                 Rate = Rate.Parse("5.00%"),
-                FaceValue = 1000.0,
+                FaceValue = 1000m,
                 PaymentFrequency = "annual",
                 Rating = "AA",
                 Type = "Corporate",
-                YearsToMaturity = 2.0,
-                DiscountFactor = 0.95
+                YearsToMaturity = 2m,
+                DiscountFactor = 0.95m
             };
             var longMaturityBond = new CouponBond
             {
                 BondId = "COUPON008",
                 Issuer = "Test Issuer",
                 Rate = Rate.Parse("5.00%"),
-                FaceValue = 1000.0,
+                FaceValue = 1000m,
                 PaymentFrequency = "annual",
                 Rating = "AA",
                 Type = "Corporate",
-                YearsToMaturity = 10.0,
-                DiscountFactor = 0.95
+                YearsToMaturity = 10m,
+                DiscountFactor = 0.95m
             };
 
             // Act

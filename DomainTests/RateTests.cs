@@ -15,7 +15,7 @@ namespace DomainTests
             var rate = Rate.Parse(rateString);
 
             // Assert
-            Assert.Equal(0.0, rate.Value);
+            Assert.Equal(0m, rate.Value);
         }
 
         [Theory]
@@ -25,7 +25,7 @@ namespace DomainTests
         [InlineData("7.5", 0.075d)]
         [InlineData("7.5%", 0.075d)]
         [InlineData(" 7.5% ", 0.075d)]
-        public void Parse_WithValidRateString_ReturnsCorrectRate(string rateString, double expectedValue)
+        public void Parse_WithValidRateString_ReturnsCorrectRate(string rateString, decimal expectedValue)
         {
             // Act
             var rate = Rate.Parse(rateString);

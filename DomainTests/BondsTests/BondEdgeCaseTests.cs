@@ -15,12 +15,12 @@ namespace DomainTests.BondsTests
                 BondId = "BOND002",
                 Issuer = "Test Issuer",
                 Rate = Rate.Parse("3.50%"),
-                FaceValue = 0.0,
+                FaceValue = 0m,
                 PaymentFrequency = "semi-annual",
                 Rating = "BBB",
                 Type = "Zero-Coupon",
-                YearsToMaturity = 5.0,
-                DiscountFactor = 0.90
+                YearsToMaturity = 5m,
+                DiscountFactor = 0.9m
             };
 
             // Assert
@@ -36,16 +36,16 @@ namespace DomainTests.BondsTests
                 BondId = "BOND003",
                 Issuer = "Test Issuer",
                 Rate = Rate.Parse("4.25%"),
-                FaceValue = 1000.0,
+                FaceValue = 1000m,
                 PaymentFrequency = "quarterly",
                 Rating = "AA",
                 Type = "Coupon",
-                YearsToMaturity = 0.0,
-                DiscountFactor = 0.85
+                YearsToMaturity = 0m,
+                DiscountFactor = 0.85m
             };
 
             // Assert
-            Assert.Equal(0.0, bond.YearsToMaturity);
+            Assert.Equal(0m, bond.YearsToMaturity);
         }
 
         [Fact]
@@ -57,29 +57,29 @@ namespace DomainTests.BondsTests
                 BondId = "BOND004",
                 Issuer = "Test Issuer",
                 Rate = Rate.Parse("6.00%"),
-                FaceValue = 1000.0,
+                FaceValue = 1000m,
                 PaymentFrequency = "annual",
                 Rating = "A",
                 Type = "Coupon",
-                YearsToMaturity = 15.0,
-                DiscountFactor = 0.0
+                YearsToMaturity = 15m,
+                DiscountFactor = 0m
             };
             var bondOne = new TestBond
             {
                 BondId = "BOND005",
                 Issuer = "Test Issuer",
                 Rate = Rate.Parse("6.00%"),
-                FaceValue = 1000.0,
+                FaceValue = 1000m,
                 PaymentFrequency = "annual",
                 Rating = "A",
                 Type = "Coupon",
-                YearsToMaturity = 15.0,
-                DiscountFactor = 1.0
+                YearsToMaturity = 15m,
+                DiscountFactor = 1m
             };
 
             // Assert
-            Assert.Equal(0.0, bondZero.DiscountFactor);
-            Assert.Equal(1.0, bondOne.DiscountFactor);
+            Assert.Equal(0m, bondZero.DiscountFactor);
+            Assert.Equal(1m, bondOne.DiscountFactor);
         }
     }
 }
