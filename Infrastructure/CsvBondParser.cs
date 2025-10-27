@@ -7,7 +7,7 @@ using System.Globalization;
 
 namespace Infrastructure
 {
-    public class FlexibleDecimalConverter : DoubleConverter
+    public class FlexibleDecimalConverter : DecimalConverter
     {
         //Helper class to handle both comma and period as decimal separators in the CSV files (given DiscountFactor case)
         public override object? ConvertFromString(string? text, IReaderRow row, MemberMapData memberMapData)
